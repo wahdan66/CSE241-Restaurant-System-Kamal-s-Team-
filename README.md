@@ -7,8 +7,8 @@ An object-oriented desktop and mobile-ready restaurant ordering, reservation, an
 ## 👥 Team Members
 
 * **Kamal Wahdan** — Team Lead & Core Architect
-* **Ziad Atef** — Developer / Backend Lead
-* **Nour Hatem** — Developer / UI Specialist
+* **Ziad Atef** — Developer 
+* **Nour Hatem** — Developer 
 
 ---
 
