@@ -1,0 +1,29 @@
+src/
+└── com/restaurant/
+    ├── model/               <-- Data structures & OOP domain entities (Task 1.1.2)
+    │   ├── user/            <-- User classes (User.java, Customer.java, Staff.java, etc.)
+    │   ├── menu/            <-- Menu classes (MenuItem.java, MenuCategory.java)
+    │   ├── order/           <-- Order logic (Order.java, OrderItem.java, Invoice.java)
+    │   └── table/           <-- Seating logic (Table.java, TableType.java, Reservation.java)
+    │
+    ├── db/                  <-- Data persistence layer (Task 1.1.3)
+    │   └── RestaurantDatabase.java
+    │
+    ├── util/                <-- Utility tools, Enums, & Validators (Task 1.1.1 & 1.1.4)
+    │   ├── enums/           <-- Enums (Role.java, TableStatus.java, OrderStatus.java)
+    │   ├── validation/      <-- Input checkers (PasswordValidator.java, FormatValidator.java)
+    │   └── Payable.java     <-- Core interfaces
+    │
+    ├── controller/          <-- JavaFX logic controllers (Task 1.2.2 - 1.2.4)
+    │   ├── auth/            <-- LoginController.java, RegisterController.java
+    │   ├── customer/        <-- CustomerDashboardController.java, OrderMenuController.java
+    │   └── admin/           <-- AdminPanelController.java, WaiterDashboardController.java
+    │
+    ├── network/             <-- Bonus features (Task 1.2.5)
+    │   ├── server/          <-- RestaurantServer.java
+    │   └── client/          <-- OrderStatusClient.java
+    │
+    └── view/                <-- Visual assets & FXML layouts (Task 1.2.1)
+        ├── fxml/            <-- All .fxml files (login.fxml, menu.fxml, dashboard.fxml)
+        ├── css/             <-- Custom styling (styles.css)
+        └── images/          <-- Icons and logo images
