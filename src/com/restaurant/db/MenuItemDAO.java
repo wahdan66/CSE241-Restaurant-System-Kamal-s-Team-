@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/** Provides CRUD operations and category filtering for menu items. */
 public class MenuItemDAO implements GenericDAO<MenuItem, String> {
 
     @Override
@@ -22,6 +23,7 @@ public class MenuItemDAO implements GenericDAO<MenuItem, String> {
     }
 
     public List<MenuItem> findByCategory(MenuCategory category) {
+        // Enum values are single constants, so identity comparison is appropriate.
         return RestaurantDatabase.menuItems.stream()
                 .filter(m -> m.getCategory() == category)
                 .collect(Collectors.toList());

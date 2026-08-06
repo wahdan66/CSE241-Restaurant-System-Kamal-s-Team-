@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/** Provides CRUD and username lookup operations over the in-memory user list. */
 public class UserDAO implements GenericDAO<User, String> {
 
     @Override
@@ -20,6 +21,7 @@ public class UserDAO implements GenericDAO<User, String> {
     }
 
     public Optional<User> findByUsername(String username) {
+        // Usernames are compared without case so sign-in lookup is consistent.
         return RestaurantDatabase.users.stream()
                 .filter(u -> u.getUsername().equalsIgnoreCase(username))
                 .findFirst();
@@ -32,6 +34,7 @@ public class UserDAO implements GenericDAO<User, String> {
 
     @Override
     public boolean update(User user) {
+        // Find the stored instance first, then replace it at the same list position.
         Optional<User> existing = findById(user.getId());
         if (existing.isPresent()) {
             int index = RestaurantDatabase.users.indexOf(existing.get());

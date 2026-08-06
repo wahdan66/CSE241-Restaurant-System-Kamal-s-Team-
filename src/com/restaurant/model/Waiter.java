@@ -1,11 +1,13 @@
 package com.restaurant.model;
 
+/** Represents a waiter account, including workload and active-state information. */
 public class Waiter extends User implements Manageable {
     private int assignedTableCount;
     private boolean active = true;
 
     public Waiter() {
         super();
+        // Assign the fixed role required for this specialized user type.
         setRole(Role.WAITER);
     }
 

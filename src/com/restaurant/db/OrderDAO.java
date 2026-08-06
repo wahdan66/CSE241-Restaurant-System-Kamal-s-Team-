@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/** Provides CRUD operations over the in-memory order list. */
 public class OrderDAO implements GenericDAO<Order, String> {
 
     @Override

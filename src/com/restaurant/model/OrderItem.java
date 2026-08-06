@@ -1,5 +1,6 @@
 package com.restaurant.model;
 
+/** Couples one menu item with the quantity selected for an order. */
 public class OrderItem {
     private MenuItem menuItem;
     private int quantity;
@@ -29,6 +30,7 @@ public class OrderItem {
     }
 
     public double getSubtotal() {
+        // An unassigned menu item has no price, avoiding a null-pointer exception.
         return menuItem != null ? menuItem.getPrice() * quantity : 0.0;
     }
 }

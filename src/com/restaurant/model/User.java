@@ -8,10 +8,15 @@ import java.util.UUID;
  * <p>The password is stored as a hash rather than as plain text.</p>
  */
 public class User {
+    /** Stores the user's unique identifier as text, including UUID values when used. */
     private String id;
+    /** Stores the name shown for this user in the application. */
     private String name;
+    /** Stores the username used during sign-in. */
     private String username;
+    /** Stores only the password hash, never the original password. */
     private String passwordHash;
+    /** Stores the permissions category assigned to the user. */
     private Role role;
 
     /**
@@ -30,6 +35,7 @@ public class User {
      * @param role user's access role
      */
     public User(String id, String name, String username, String passwordHash, Role role) {
+        // Copy the supplied account data into this new user object.
         this.id = id;
         this.name = name;
         this.username = username;
@@ -47,6 +53,8 @@ public class User {
      * @param role user's access role
      */
     public User(UUID id, String name, String username, String passwordHash, Role role) {
+        // Convert a UUID to text because the id field is stored as a String.
+        // Preserve null when no identifier has been supplied.
         this(id == null ? null : id.toString(), name, username, passwordHash, role);
     }
 

@@ -1,5 +1,6 @@
 package com.restaurant.model;
 
+/** Represents a dish or drink that can appear on the restaurant menu. */
 public class MenuItem implements Manageable {
     private String id;
     private String name;

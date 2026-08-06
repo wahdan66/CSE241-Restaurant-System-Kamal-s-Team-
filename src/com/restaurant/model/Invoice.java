@@ -2,6 +2,7 @@ package com.restaurant.model;
 
 import java.time.LocalDateTime;
 
+/** Represents the bill for an order, including tax, issue time, and payment state. */
 public class Invoice implements Payable {
     private String invoiceId;
     private Order order;
@@ -54,13 +55,16 @@ public class Invoice implements Payable {
 
     @Override
     public double calculateTotal() {
+        // An invoice without an order cannot have a billable amount.
         if (order == null) return 0.0;
         double subtotal = order.calculateTotal();
+        // Tax is a decimal rate: for example, 0.08 represents 8 percent.
         return subtotal + (subtotal * taxRate);
     }
 
     @Override
     public boolean processPayment(double amount) {
+        // Mark the invoice as paid only when the supplied amount covers its total.
         if (amount >= calculateTotal()) {
             this.paid = true;
             return true;

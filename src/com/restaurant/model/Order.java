@@ -3,6 +3,7 @@ package com.restaurant.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Represents the items ordered for one restaurant table and their workflow status. */
 public class Order implements Payable {
     private String id;
     private int tableNumber;
@@ -54,6 +55,7 @@ public class Order implements Payable {
     @Override
     public double calculateTotal() {
         double total = 0.0;
+        // Each order item already calculates price multiplied by its quantity.
         for (OrderItem item : items) {
             total += item.getSubtotal();
         }
@@ -62,7 +64,9 @@ public class Order implements Payable {
 
     @Override
     public boolean processPayment(double amount) {
+        // Payment is accepted only when it covers the complete order total.
         if (amount >= calculateTotal()) {
+            // A successful payment marks the order as delivered/served in this model.
             this.status = OrderStatus.SERVED;
             return true;
         }

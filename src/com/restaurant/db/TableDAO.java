@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/** Provides CRUD operations and status filtering for restaurant tables. */
 public class TableDAO implements GenericDAO<Table, Integer> {
 
     @Override
@@ -22,6 +23,7 @@ public class TableDAO implements GenericDAO<Table, Integer> {
     }
 
     public List<Table> findByStatus(TableStatus status) {
+        // Return only tables whose enum status exactly matches the requested state.
         return RestaurantDatabase.tables.stream()
                 .filter(t -> t.getStatus() == status)
                 .collect(Collectors.toList());
@@ -34,6 +36,7 @@ public class TableDAO implements GenericDAO<Table, Integer> {
 
     @Override
     public boolean update(Table table) {
+        // Replacing instead of mutating preserves the DAO's update contract.
         Optional<Table> existing = findById(table.getTableNumber());
         if (existing.isPresent()) {
             int index = RestaurantDatabase.tables.indexOf(existing.get());

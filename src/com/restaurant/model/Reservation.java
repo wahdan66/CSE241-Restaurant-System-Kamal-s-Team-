@@ -2,6 +2,7 @@ package com.restaurant.model;
 
 import java.time.LocalDateTime;
 
+/** Stores the customer and time details for a future table reservation. */
 public class Reservation {
     private String id;
     private String customerName;
