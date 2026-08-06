@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 public class InputValidator {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]{7,15}$");
+    // Update PHONE_PATTERN in InputValidator.java:
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9\\s\\-\\(\\)]{7,20}$");
 
     public static void validateNotNullOrEmpty(String value, String fieldName) {
         // trim() treats whitespace-only text as missing input.
