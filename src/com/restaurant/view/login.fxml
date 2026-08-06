@@ -33,6 +33,8 @@
     <Label fx:id="statusLabel" styleClass="error-text" visible="false"/>
 
     <!-- Actions -->
+    <!-- Actions -->
     <Button text="Login" onAction="#handleLogin" prefWidth="300"/>
+    <Button text="Register New Account" onAction="#handleGoToRegister" prefWidth="300" style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-underline: true;"/>
 
 </VBox>
