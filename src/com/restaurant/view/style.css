@@ -1,0 +1,60 @@
+/* Main Application Styling */
+.root {
+    -fx-font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f4f6f9;
+}
+
+/* Primary Header */
+.header-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: #1a252f;
+}
+
+/* Base Buttons */
+.button {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #34495e;
+}
+
+.button-accent {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.button-accent:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* Text Inputs */
+.text-field, .password-field {
+    -fx-background-radius: 4px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4px;
+    -fx-padding: 6px 10px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 2px;
+}
+
+/* Form Labels & Status Messages */
+.error-text {
+    -fx-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
+
+.success-text {
+    -fx-fill: #27ae60;
+    -fx-font-weight: bold;
+}
