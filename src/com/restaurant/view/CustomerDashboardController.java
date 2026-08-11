@@ -28,8 +28,31 @@ public class CustomerDashboardController {
     public void initialize() {
         loadMenuItems();
 
-        // Listen for search input changes
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterMenu());
+        // Populate Category Dropdown
+        categoryFilter.setItems(FXCollections.observableArrayList(
+                "All Categories", "Main Course", "Appetizers", "Beverages", "Desserts"
+        ));
+        categoryFilter.getSelectionModel().selectFirst();
+
+        // Listen for search input and dropdown changes
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterMenu());
+        categoryFilter.setOnAction(event -> filterMenu());
+    }
+
+    private void filterMenu() {
+        String query = searchField.getText().toLowerCase().trim();
+        String selectedCategory = categoryFilter.getSelectionModel().getSelectedItem();
+
+        ObservableList<MenuItem> filtered = observableMenuList.filtered(item -> {
+            boolean matchesSearch = query.isEmpty() || item.getName().toLowerCase().contains(query);
+            boolean matchesCategory = selectedCategory == null
+                    || selectedCategory.equals("All Categories")
+                    || (item.getCategory() != null && item.getCategory().equalsIgnoreCase(selectedCategory));
+
+            return matchesSearch && matchesCategory;
+        });
+
+        menuListView.setItems(filtered);
     }
 
     private void loadMenuItems() {
