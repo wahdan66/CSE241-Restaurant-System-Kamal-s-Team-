@@ -26,8 +26,12 @@ public class LoginController {
         try {
             User user = authController.login(username, password);
 
-            // Load the Customer Dashboard on successful login
-            ViewNavigator.loadView("/com/restaurant/view/customer_dashboard.fxml", "Customer Dashboard");
+            // Check user type/role and navigate to corresponding view
+            if (user.getUsername().equalsIgnoreCase("admin")) {
+                ViewNavigator.loadView("/com/restaurant/view/admin_dashboard.fxml", "Admin Dashboard");
+            } else {
+                ViewNavigator.loadView("/com/restaurant/view/customer_dashboard.fxml", "Customer Dashboard");
+            }
 
         } catch (BusinessRuleException e) {
             statusLabel.setStyle("-fx-text-fill: #e74c3c;");
