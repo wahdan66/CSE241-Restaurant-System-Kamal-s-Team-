@@ -66,19 +66,6 @@ public class CustomerDashboardController {
         }
     }
 
-    private void filterMenu() {
-        String query = searchField.getText().toLowerCase().trim();
-        if (query.isEmpty()) {
-            menuListView.setItems(observableMenuList);
-        } else {
-            ObservableList<MenuItem> filtered = observableMenuList.filtered(item ->
-                    item.getName().toLowerCase().contains(query)
-            );
-            menuListView.setItems(filtered);
-        }
-    }
-    
-
     @FXML
     private void handleBookReservation() {
         // Will route to Reservation screen in Task 1.2.5
