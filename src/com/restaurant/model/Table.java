@@ -88,4 +88,10 @@ public class Table implements Manageable {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        // Adjust getter names to match your Table model
+        return String.format("Table #%d (Capacity: %d seats)", getTableNumber(), getCapacity());
+    }
 }
