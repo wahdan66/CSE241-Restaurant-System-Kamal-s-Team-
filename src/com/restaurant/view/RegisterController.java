@@ -1,13 +1,16 @@
 package com.restaurant.view;
 
-import com.restaurant.controller.AuthController;
+import com.restaurant.db.UserDAO;
 import com.restaurant.exception.BusinessRuleException;
-import com.restaurant.model.User;
+import com.restaurant.model.Customer;
+import com.restaurant.util.InputValidator;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+
+import java.util.UUID;
 
 public class RegisterController {
 
@@ -17,19 +20,40 @@ public class RegisterController {
     @FXML private TextField phoneField;
     @FXML private Label statusLabel;
 
-    private final AuthController authController = new AuthController();
+    private final UserDAO userDAO = new UserDAO();
 
     @FXML
     private void handleRegister() {
+        String name = nameField.getText();
         String username = usernameField.getText();
         String password = passwordField.getText();
+        String phone = phoneField.getText();
 
         try {
-            // Reuses your existing login/authentication pipeline
-            User user = authController.login(username, password);
+            // Validate inputs using project's validator
+            InputValidator.validateNotNullOrEmpty(name, "Name");
+            InputValidator.validateNotNullOrEmpty(username, "Username");
+            InputValidator.validateNotNullOrEmpty(password, "Password");
+            InputValidator.validateNotNullOrEmpty(phone, "Phone");
 
+            // Check if username is already taken
+            if (userDAO.findByUsername(username).isPresent()) {
+                throw new BusinessRuleException("Username is already taken.");
+            }
+
+            // Save new customer account
+            Customer customer = new Customer(
+                    UUID.randomUUID().toString(),
+                    name,
+                    username,
+                    password,
+                    phone
+            );
+            userDAO.save(customer);
+
+            // Display success message
             statusLabel.setStyle("-fx-text-fill: #27ae60;");
-            statusLabel.setText("Welcome back, " + user.getName());
+            statusLabel.setText("Registration successful! Click 'Back to Login' to sign in.");
             statusLabel.setVisible(true);
 
         } catch (BusinessRuleException e) {
