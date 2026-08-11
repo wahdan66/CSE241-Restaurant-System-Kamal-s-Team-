@@ -67,11 +67,6 @@ public class CustomerDashboardController {
     }
 
     @FXML
-    private void handleBookReservation() {
-        // Will route to Reservation screen in Task 1.2.5
-    }
-
-    @FXML
     private void handleLogout() {
         authController.logout();
         ViewNavigator.loadView("/com/restaurant/view/login.fxml", "Login");
@@ -97,5 +92,10 @@ public class CustomerDashboardController {
     @FXML
     private void handleViewCart() {
         ViewNavigator.loadView("/com/restaurant/view/cart.fxml", "Your Cart");
+    }
+
+    @FXML
+    private void handleBookReservation() {
+        ViewNavigator.loadView("/com/restaurant/view/reservation.fxml", "Book Reservation");
     }
 }
