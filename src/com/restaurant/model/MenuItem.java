@@ -71,7 +71,7 @@ public class MenuItem implements Manageable {
     }
     @Override
     public String toString() {
-        // Customize getters to match your actual MenuItem field names 
+        // Customize getters to match your actual MenuItem field names
         return String.format("%s - $%.2f", getName(), getPrice());
     }
 }

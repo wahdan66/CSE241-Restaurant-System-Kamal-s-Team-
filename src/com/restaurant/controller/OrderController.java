@@ -5,6 +5,7 @@ import com.restaurant.exception.BusinessRuleException;
 import com.restaurant.model.*;
 import com.restaurant.util.BusinessRuleValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderController {
@@ -59,5 +60,8 @@ public class OrderController {
 
     public List<Order> getAllOrders() {
         return orderDAO.findAll();
+    }
+
+    public <E> void createOrder(ArrayList<E> es) {
     }
 }
