@@ -69,4 +69,9 @@ public class MenuItem implements Manageable {
     public void setActive(boolean active) {
         this.active = active;
     }
+    @Override
+    public String toString() {
+        // Customize getters to match your actual MenuItem field names 
+        return String.format("%s - $%.2f", getName(), getPrice());
+    }
 }
