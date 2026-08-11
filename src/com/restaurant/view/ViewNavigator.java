@@ -23,6 +23,13 @@ public class ViewNavigator {
     }
 
     /**
+     * Alias for setPrimaryStage to ensure compatibility.
+     */
+    public static void setMainStage(Stage stage) {
+        primaryStage = stage;
+    }
+
+    /**
      * Dynamic screen switcher loading FXML layout files and applying global CSS.
      *
      * @param fxmlPath Path to the FXML resource (relative to view package or root)
@@ -37,9 +44,11 @@ public class ViewNavigator {
             String cssPath = Objects.requireNonNull(ViewNavigator.class.getResource("/com/restaurant/view/style.css")).toExternalForm();
             scene.getStylesheets().add(cssPath);
 
-            primaryStage.setTitle("Restaurant Management System - " + title);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            if (primaryStage != null) {
+                primaryStage.setTitle("Restaurant Management System - " + title);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+            }
 
         } catch (IOException e) {
             System.err.println("Failed to load view: " + fxmlPath);

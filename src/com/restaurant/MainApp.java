@@ -1,20 +1,19 @@
 package com.restaurant;
 
+import com.restaurant.network.OrderSocketServer;
 import com.restaurant.view.ViewNavigator;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-/**
- * Main JavaFX Application launcher.
- */
 public class MainApp extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
-        // Register the primary stage into the navigation framework
-        ViewNavigator.setPrimaryStage(primaryStage);
+    public void start(Stage primaryStage) throws Exception {
+        // Start background socket server for real-time synchronization
+        OrderSocketServer.getInstance().startServer();
 
-        // Load the initial screen (e.g., Login view in Task 1.2.2)
+        // Pass primary stage to ViewNavigator and navigate to Login
+        ViewNavigator.setMainStage(primaryStage);
         ViewNavigator.loadView("/com/restaurant/view/login.fxml", "Login");
     }
 
