@@ -26,11 +26,23 @@ public class OrderSocketServer implements Runnable {
     }
 
     public void startServer() {
-        Thread serverThread = new Thread(this, "SocketServerThread");
-        serverThread.setDaemon(true); // Automatically closes when the app exits
+        Thread serverThread = new Thread(() -> {
+            try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+                System.out.println("[SocketServer] Server running on port " + PORT);
+                while (running) {
+                    Socket clientSocket = serverSocket.accept();
+                    new Thread(new ClientHandler(clientSocket)).start();
+                }
+            } catch (java.net.BindException e) {
+                System.out.println("[SocketServer] Port " + PORT + " already in use. Joining as a client instance.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "SocketServerThread");
+
+        serverThread.setDaemon(true);
         serverThread.start();
     }
-
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
