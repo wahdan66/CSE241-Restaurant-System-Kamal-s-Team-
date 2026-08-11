@@ -2,6 +2,7 @@ package com.restaurant.view;
 
 import com.restaurant.controller.OrderController;
 import com.restaurant.model.MenuItem;
+import com.restaurant.network.OrderSocketClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,6 +19,7 @@ public class CartController {
 
     private static final ObservableList<MenuItem> cartItems = FXCollections.observableArrayList();
     private final OrderController orderController = new OrderController();
+    private final OrderSocketClient socketClient = new OrderSocketClient();
 
     public static ObservableList<MenuItem> getCartItems() {
         return cartItems;
@@ -56,6 +58,9 @@ public class CartController {
             // Converts ObservableList to a standard ArrayList to match OrderController
             orderController.createOrder(new ArrayList<>(cartItems));
             cartItems.clear();
+
+            // Broadcast real-time notification to Waiter & Admin screens
+            socketClient.sendMessage("REFRESH_ORDERS");
 
             statusLabel.setStyle("-fx-text-fill: #27ae60;");
             statusLabel.setText("Order placed successfully!");

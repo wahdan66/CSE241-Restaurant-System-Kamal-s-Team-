@@ -5,6 +5,7 @@ import com.restaurant.controller.MenuController;
 import com.restaurant.controller.OrderController;
 import com.restaurant.model.MenuItem;
 import com.restaurant.model.Order;
+import com.restaurant.network.OrderSocketClient;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -35,6 +36,7 @@ public class AdminDashboardController {
     private final MenuController menuController = new MenuController();
     private final OrderController orderController = new OrderController();
     private final AuthController authController = new AuthController();
+    private final OrderSocketClient socketClient = new OrderSocketClient();
 
     private final ObservableList<MenuItem> menuList = FXCollections.observableArrayList();
     private final ObservableList<Order> orderList = FXCollections.observableArrayList();
@@ -47,10 +49,19 @@ public class AdminDashboardController {
 
         // Orders Table setup
         orderIdColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getId()));
-        orderTotalColumn.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getTotalPrice()));
+        orderTotalColumn.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().calculateTotal()));
         orderStatusColumn.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getStatus() != null ? data.getValue().getStatus().toString() : "PENDING"
         ));
+
+        // Start listening for real-time background socket updates
+        socketClient.startListening(message -> {
+            if ("REFRESH_ORDERS".equals(message)) {
+                loadOrdersData();
+            } else if ("REFRESH_MENU".equals(message)) {
+                loadMenuData();
+            }
+        });
 
         loadMenuData();
         loadOrdersData();
@@ -72,7 +83,6 @@ public class AdminDashboardController {
             orderList.setAll(orders);
             ordersTableView.setItems(orderList);
         } catch (Exception e) {
-            // Silently handle if no orders are placed yet
             orderList.clear();
         }
     }
@@ -106,6 +116,9 @@ public class AdminDashboardController {
             menuController.addMenuItem(id, name, description, price, category);
             menuList.add(newItem);
 
+            // Broadcast real-time menu update to other clients
+            socketClient.sendMessage("REFRESH_MENU");
+
             itemNameField.clear();
             itemPriceField.clear();
 
@@ -130,6 +143,9 @@ public class AdminDashboardController {
         try {
             menuController.deleteMenuItem(selected.getId());
             menuList.remove(selected);
+
+            // Broadcast real-time menu update to other clients
+            socketClient.sendMessage("REFRESH_MENU");
 
             statusLabel.setStyle("-fx-text-fill: #27ae60;");
             statusLabel.setText("Removed " + selected.getName() + " from menu.");

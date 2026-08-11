@@ -4,6 +4,7 @@ import com.restaurant.controller.AuthController;
 import com.restaurant.controller.OrderController;
 import com.restaurant.model.Order;
 import com.restaurant.model.OrderStatus;
+import com.restaurant.network.OrderSocketClient;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,6 +28,7 @@ public class WaiterDashboardController {
 
     private final OrderController orderController = new OrderController();
     private final AuthController authController = new AuthController();
+    private final OrderSocketClient socketClient = new OrderSocketClient();
     private final ObservableList<Order> orderList = FXCollections.observableArrayList();
 
     @FXML
@@ -34,10 +36,17 @@ public class WaiterDashboardController {
         statusComboBox.setItems(FXCollections.observableArrayList(OrderStatus.values()));
 
         orderIdColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getId()));
-        totalColumn.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getTotalPrice()));
+        totalColumn.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().calculateTotal()));
         statusColumn.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getStatus() != null ? data.getValue().getStatus().toString() : "PENDING"
         ));
+
+        // Start listening for real-time background socket updates
+        socketClient.startListening(message -> {
+            if ("REFRESH_ORDERS".equals(message)) {
+                loadOrders();
+            }
+        });
 
         loadOrders();
     }
@@ -69,6 +78,9 @@ public class WaiterDashboardController {
         try {
             selected.setStatus(newStatus);
             ordersTableView.refresh();
+
+            // Broadcast real-time order update to Admin and Customer screens
+            socketClient.sendMessage("REFRESH_ORDERS");
 
             statusLabel.setStyle("-fx-text-fill: #27ae60;");
             statusLabel.setText("Order #" + selected.getId() + " status updated to " + newStatus);

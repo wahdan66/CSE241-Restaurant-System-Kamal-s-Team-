@@ -98,4 +98,5 @@ public class CustomerDashboardController {
     private void handleBookReservation() {
         ViewNavigator.loadView("/com/restaurant/view/reservation.fxml", "Book Reservation");
     }
+
 }
