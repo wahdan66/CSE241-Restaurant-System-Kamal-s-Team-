@@ -24,20 +24,18 @@ public class LoginController {
         String password = passwordField.getText();
 
         try {
-            // Execute login via backend AuthController
             User user = authController.login(username, password);
 
-            // Display success status
-            statusLabel.setStyle("-fx-text-fill: #27ae60;");
-            statusLabel.setText("Login successful! Welcome " + user.getName());
-            statusLabel.setVisible(true);
+            // Load the Customer Dashboard on successful login
+            ViewNavigator.loadView("/com/restaurant/view/customer_dashboard.fxml", "Customer Dashboard");
 
-            // TODO: Route user based on role (Admin vs Customer vs Waiter) in Task 1.2.3 / 1.2.4
-
-        } catch (ValidationException | BusinessRuleException e) {
-            // Real-time validation error feedback
+        } catch (BusinessRuleException e) {
             statusLabel.setStyle("-fx-text-fill: #e74c3c;");
             statusLabel.setText(e.getMessage());
+            statusLabel.setVisible(true);
+        } catch (Exception e) {
+            statusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            statusLabel.setText("An error occurred: " + e.getMessage());
             statusLabel.setVisible(true);
         }
     }
