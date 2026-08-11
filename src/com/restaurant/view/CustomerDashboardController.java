@@ -54,26 +54,7 @@ public class CustomerDashboardController {
             menuListView.setItems(filtered);
         }
     }
-
-    @FXML
-    private void handleAddToCart() {
-        MenuItem selectedItem = menuListView.getSelectionModel().getSelectedItem();
-        if (selectedItem == null) {
-            statusLabel.setStyle("-fx-text-fill: #e74c3c;");
-            statusLabel.setText("Please select a menu item first.");
-            statusLabel.setVisible(true);
-            return;
-        }
-
-        statusLabel.setStyle("-fx-text-fill: #229954;");
-        statusLabel.setText("Added " + selectedItem.getName() + " to cart!");
-        statusLabel.setVisible(true);
-    }
-
-    @FXML
-    private void handleViewCart() {
-        // Will route to Cart screen in Task 1.2.4
-    }
+    
 
     @FXML
     private void handleBookReservation() {
@@ -84,5 +65,27 @@ public class CustomerDashboardController {
     private void handleLogout() {
         authController.logout();
         ViewNavigator.loadView("/com/restaurant/view/login.fxml", "Login");
+    }
+    @FXML
+    private void handleAddToCart() {
+        MenuItem selectedItem = menuListView.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            statusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            statusLabel.setText("Please select a menu item first.");
+            statusLabel.setVisible(true);
+            return;
+        }
+
+        // Add item to shared cart list
+        CartController.getCartItems().add(selectedItem);
+
+        statusLabel.setStyle("-fx-text-fill: #229954;");
+        statusLabel.setText("Added " + selectedItem.getName() + " to cart!");
+        statusLabel.setVisible(true);
+    }
+
+    @FXML
+    private void handleViewCart() {
+        ViewNavigator.loadView("/com/restaurant/view/cart.fxml", "Your Cart");
     }
 }
