@@ -61,6 +61,9 @@ public class Order implements Payable {
         }
         return total;
     }
+    public double getTotalPrice() {
+        return calculateTotal();
+    }
 
     @Override
     public boolean processPayment(double amount) {

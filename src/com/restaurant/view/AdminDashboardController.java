@@ -2,7 +2,9 @@ package com.restaurant.view;
 
 import com.restaurant.controller.AuthController;
 import com.restaurant.controller.MenuController;
+import com.restaurant.controller.OrderController;
 import com.restaurant.model.MenuItem;
+import com.restaurant.model.Order;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,19 +24,36 @@ public class AdminDashboardController {
     @FXML private TableView<MenuItem> menuTableView;
     @FXML private TableColumn<MenuItem, String> nameColumn;
     @FXML private TableColumn<MenuItem, Number> priceColumn;
+
+    @FXML private TableView<Order> ordersTableView;
+    @FXML private TableColumn<Order, String> orderIdColumn;
+    @FXML private TableColumn<Order, Number> orderTotalColumn;
+    @FXML private TableColumn<Order, String> orderStatusColumn;
+
     @FXML private Label statusLabel;
 
     private final MenuController menuController = new MenuController();
+    private final OrderController orderController = new OrderController();
     private final AuthController authController = new AuthController();
+
     private final ObservableList<MenuItem> menuList = FXCollections.observableArrayList();
+    private final ObservableList<Order> orderList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Setup Table Columns
+        // Menu Table setup
         nameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         priceColumn.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getPrice()));
 
+        // Orders Table setup
+        orderIdColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getId()));
+        orderTotalColumn.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getTotalPrice()));
+        orderStatusColumn.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getStatus() != null ? data.getValue().getStatus().toString() : "PENDING"
+        ));
+
         loadMenuData();
+        loadOrdersData();
     }
 
     private void loadMenuData() {
@@ -45,6 +64,25 @@ public class AdminDashboardController {
         } catch (Exception e) {
             showError("Could not load menu: " + e.getMessage());
         }
+    }
+
+    private void loadOrdersData() {
+        try {
+            List<Order> orders = orderController.getAllOrders();
+            orderList.setAll(orders);
+            ordersTableView.setItems(orderList);
+        } catch (Exception e) {
+            // Silently handle if no orders are placed yet
+            orderList.clear();
+        }
+    }
+
+    @FXML
+    private void handleRefreshOrders() {
+        loadOrdersData();
+        statusLabel.setStyle("-fx-text-fill: #27ae60;");
+        statusLabel.setText("Orders refreshed successfully.");
+        statusLabel.setVisible(true);
     }
 
     @FXML
@@ -64,7 +102,6 @@ public class AdminDashboardController {
             String description = "No description provided";
             com.restaurant.model.MenuCategory category = com.restaurant.model.MenuCategory.MAIN_COURSE;
 
-            // Pass all 5 arguments to match both the MenuItem constructor and MenuController
             MenuItem newItem = new MenuItem(id, name, description, price, category);
             menuController.addMenuItem(id, name, description, price, category);
             menuList.add(newItem);
@@ -91,7 +128,6 @@ public class AdminDashboardController {
         }
 
         try {
-            // Remove from backend controller and UI table
             menuController.deleteMenuItem(selected.getId());
             menuList.remove(selected);
 

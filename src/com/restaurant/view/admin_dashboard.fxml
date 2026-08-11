@@ -52,16 +52,22 @@
             </VBox>
         </Tab>
 
-        <!-- Tab 2: View Orders -->
+        <!-- Tab 2: Customer Orders -->
         <Tab text="Customer Orders">
             <VBox spacing="10.0">
                 <padding>
                     <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                 </padding>
+
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Button text="Refresh Orders" onAction="#handleRefreshOrders" styleClass="button-accent"/>
+                </HBox>
+
                 <TableView fx:id="ordersTableView" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="150"/>
-                        <TableColumn fx:id="orderTotalColumn" text="Total Amount" prefWidth="150"/>
+                        <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="180"/>
+                        <TableColumn fx:id="orderTotalColumn" text="Total Amount ($)" prefWidth="150"/>
+                        <TableColumn fx:id="orderStatusColumn" text="Status" prefWidth="150"/>
                     </columns>
                 </TableView>
             </VBox>
