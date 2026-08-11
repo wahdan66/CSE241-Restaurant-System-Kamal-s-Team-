@@ -1,5 +1,6 @@
 package com.restaurant.db;
 
+import com.restaurant.model.Customer;
 import com.restaurant.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +9,24 @@ import java.util.Optional;
 /** Provides CRUD and username lookup operations over the in-memory user list. */
 public class UserDAO implements GenericDAO<User, String> {
 
+    // Automatically seed test users if the database list is empty
+    static {
+        if (RestaurantDatabase.users.isEmpty()) {
+            RestaurantDatabase.users.add(new Customer("1", "Admin User", "admin", "admin123", "01000000000"));
+            RestaurantDatabase.users.add(new Customer("2", "Test Customer", "customer1", "password123", "01100000000"));
+        }
+    }
+
     @Override
     public void add(User user) {
         RestaurantDatabase.users.add(user);
+    }
+
+    /**
+     * Alias method for saving/adding users to support the RegisterController flow.
+     */
+    public void save(User user) {
+        add(user);
     }
 
     @Override
