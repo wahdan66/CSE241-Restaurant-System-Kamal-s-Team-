@@ -47,7 +47,7 @@ public class CustomerDashboardController {
             boolean matchesSearch = query.isEmpty() || item.getName().toLowerCase().contains(query);
             boolean matchesCategory = selectedCategory == null
                     || selectedCategory.equals("All Categories")
-                    || (item.getCategory() != null && item.getCategory().equalsIgnoreCase(selectedCategory));
+                    || (item.getCategory() != null && item.getCategory().name().equalsIgnoreCase(selectedCategory));
 
             return matchesSearch && matchesCategory;
         });
