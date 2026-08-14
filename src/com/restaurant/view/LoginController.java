@@ -4,6 +4,7 @@ import com.restaurant.controller.AuthController;
 import com.restaurant.exception.BusinessRuleException;
 import com.restaurant.exception.ValidationException;
 import com.restaurant.model.User;
+import com.restaurant.model.Role;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -26,9 +27,10 @@ public class LoginController {
         try {
             User user = authController.login(username, password);
 
-            // Check user type/role and navigate to corresponding view
-            if (user.getUsername().equalsIgnoreCase("admin")) {
+            if (user.getRole() == Role.ADMIN || user.getRole() == Role.MANAGER) {
                 ViewNavigator.loadView("/com/restaurant/view/admin_dashboard.fxml", "Admin Dashboard");
+            } else if (user.getRole() == Role.WAITER) {
+                ViewNavigator.loadView("/com/restaurant/view/waiter_dashboard.fxml", "Waiter Dashboard");
             } else {
                 ViewNavigator.loadView("/com/restaurant/view/customer_dashboard.fxml", "Customer Dashboard");
             }

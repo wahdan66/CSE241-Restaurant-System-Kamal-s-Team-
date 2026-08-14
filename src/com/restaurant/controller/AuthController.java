@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class AuthController {
     private final UserDAO userDAO;
-    private User currentUser;
+    private static User currentUser;
 
     public AuthController() {
         this.userDAO = new UserDAO();

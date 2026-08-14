@@ -2,6 +2,7 @@ package com.restaurant.view;
 
 import com.restaurant.controller.TableController;
 import com.restaurant.model.Table;
+import com.restaurant.model.TableStatus;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,7 +13,12 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 public class ReservationViewController {
 
@@ -30,7 +36,7 @@ public class ReservationViewController {
 
     @FXML
     public void initialize() {
-        reservationDatePicker.setValue(LocalDate.now());
+        reservationDatePicker.setValue(LocalDate.now().plusDays(1));
 
         timeSlotComboBox.setItems(FXCollections.observableArrayList(
                 "12:00 PM", "01:00 PM", "02:00 PM", "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM"
@@ -41,7 +47,9 @@ public class ReservationViewController {
 
     private void loadTables() {
         try {
-            List<Table> availableTables = tableController.getAllTables();
+            List<Table> availableTables = tableController.getAllTables().stream()
+                    .filter(table -> table.isActive() && table.getStatus() == TableStatus.AVAILABLE)
+                    .toList();
             tableList.setAll(availableTables);
             tablesListView.setItems(tableList);
         } catch (Exception e) {
@@ -67,14 +75,26 @@ public class ReservationViewController {
 
         try {
             int partySize = Integer.parseInt(partySizeText);
+            LocalTime reservationTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("hh:mm a", Locale.US));
+            LocalDateTime scheduledAt = LocalDateTime.of(date, reservationTime);
+            com.restaurant.model.User currentUser = new com.restaurant.controller.AuthController().getCurrentUser();
+            if (!(currentUser instanceof com.restaurant.model.Customer)) {
+                showError("Please log in as a customer to create a reservation.");
+                return;
+            }
+            String customerName = currentUser.getName();
+            String phone = ((com.restaurant.model.Customer) currentUser).getPhoneNumber();
+            reservationController.createReservation(
+                    "RES_" + UUID.randomUUID(), customerName, phone,
+                    selectedTable.getTableNumber(), partySize, scheduledAt);
 
-            // Access table ID or Table details depending on getter names in Table.java
             statusLabel.setStyle("-fx-text-fill: #27ae60;");
             statusLabel.setText("Reservation for Table #" + selectedTable.getTableNumber() + " confirmed!");
             statusLabel.setVisible(true);
 
             partySizeField.clear();
             timeSlotComboBox.getSelectionModel().clearSelection();
+            loadTables();
         } catch (NumberFormatException e) {
             showError("Party size must be a valid number.");
         } catch (Exception e) {

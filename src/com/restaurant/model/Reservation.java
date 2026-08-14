@@ -8,16 +8,19 @@ public class Reservation {
     private String customerName;
     private String customerPhone;
     private int tableNumber;
+    private int partySize;
     private LocalDateTime reservationTime;
 
     public Reservation() {
     }
 
-    public Reservation(String id, String customerName, String customerPhone, int tableNumber, LocalDateTime reservationTime) {
+    public Reservation(String id, String customerName, String customerPhone, int tableNumber, int partySize,
+                       LocalDateTime reservationTime) {
         this.id = id;
         this.customerName = customerName;
         this.customerPhone = customerPhone;
         this.tableNumber = tableNumber;
+        this.partySize = partySize;
         this.reservationTime = reservationTime;
     }
 
@@ -51,6 +54,14 @@ public class Reservation {
 
     public void setTableNumber(int tableNumber) {
         this.tableNumber = tableNumber;
+    }
+
+    public int getPartySize() {
+        return partySize;
+    }
+
+    public void setPartySize(int partySize) {
+        this.partySize = partySize;
     }
 
     public LocalDateTime getReservationTime() {

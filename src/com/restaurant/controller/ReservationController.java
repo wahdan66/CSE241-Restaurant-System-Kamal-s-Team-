@@ -46,14 +46,15 @@ public class ReservationController {
      * @return The newly created Reservation object
      * @throws BusinessRuleException If table doesn't exist, is inactive, or time is invalid
      */
-    public Reservation createReservation(String reservationId, String customerName, String phone, int tableNumber, LocalDateTime reservationTime) {
+    public Reservation createReservation(String reservationId, String customerName, String phone, int tableNumber,
+                                         int partySize, LocalDateTime reservationTime) {
         // Step 1: Validate text field inputs and format correctness
         InputValidator.validateNotNullOrEmpty(reservationId, "Reservation ID");
         InputValidator.validateNotNullOrEmpty(customerName, "Customer Name");
         InputValidator.validatePhoneNumber(phone);
 
         // Step 2: Enforce temporal rule — reservations cannot be scheduled in the past
-        if (reservationTime.isBefore(LocalDateTime.now())) {
+        if (reservationTime == null || !reservationTime.isAfter(LocalDateTime.now())) {
             throw new BusinessRuleException("Reservation time cannot be in the past.");
         }
 
@@ -65,12 +66,34 @@ public class ReservationController {
         if (!table.isActive()) {
             throw new BusinessRuleException("Cannot reserve an inactive table.");
         }
+        if (partySize <= 0) {
+            throw new BusinessRuleException("Party size must be at least one guest.");
+        }
+        if (partySize > table.getCapacity()) {
+            throw new BusinessRuleException("Table " + tableNumber + " seats at most " + table.getCapacity() + " guests.");
+        }
+        boolean alreadyReserved = RestaurantDatabase.reservations.stream()
+                .anyMatch(existing -> existing.getTableNumber() == tableNumber
+                        && existing.getReservationTime().equals(reservationTime));
+        if (alreadyReserved) {
+            throw new BusinessRuleException("The selected table is already reserved for that time.");
+        }
 
         // Step 5: Instantiate and store the reservation in the database repository
-        Reservation reservation = new Reservation(reservationId, customerName, phone, tableNumber, reservationTime);
+        Reservation reservation = new Reservation(reservationId, customerName, phone, tableNumber, partySize,
+                reservationTime);
         RestaurantDatabase.reservations.add(reservation);
 
         return reservation;
+    }
+
+    /**
+     * Creates a reservation for one guest when the caller does not provide a party size.
+     * Kept for compatibility with existing non-UI callers.
+     */
+    public Reservation createReservation(String reservationId, String customerName, String phone, int tableNumber,
+                                         LocalDateTime reservationTime) {
+        return createReservation(reservationId, customerName, phone, tableNumber, 1, reservationTime);
     }
 
     /**

@@ -41,6 +41,7 @@
                     <TextField fx:id="itemPriceField" promptText="Price ($)" prefWidth="100"/>
                     <Button text="Add Menu Item" onAction="#handleAddItem" styleClass="button-accent"/>
                     <Button text="Delete Selected Item" onAction="#handleDeleteItem" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                    <Button text="Refresh Menu" onAction="#handleRefreshMenu"/>
                 </HBox>
 
                 <TableView fx:id="menuTableView" VBox.vgrow="ALWAYS">
@@ -66,6 +67,10 @@
                 <TableView fx:id="ordersTableView" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="180"/>
+                        <TableColumn fx:id="orderTableColumn" text="Table" prefWidth="70"/>
+                        <TableColumn fx:id="orderSeatsColumn" text="Seats" prefWidth="70"/>
+                        <TableColumn fx:id="orderTimeColumn" text="Date &amp; Time" prefWidth="180"/>
+                        <TableColumn fx:id="orderItemsColumn" text="Items" prefWidth="250"/>
                         <TableColumn fx:id="orderTotalColumn" text="Total Amount ($)" prefWidth="150"/>
                         <TableColumn fx:id="orderStatusColumn" text="Status" prefWidth="150"/>
                     </columns>

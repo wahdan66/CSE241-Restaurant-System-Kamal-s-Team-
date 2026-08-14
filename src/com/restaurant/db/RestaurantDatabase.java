@@ -3,8 +3,8 @@ package com.restaurant.db;
 import com.restaurant.model.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * In-memory data store using static ArrayLists.
@@ -13,12 +13,12 @@ import java.util.List;
 public class RestaurantDatabase {
     //Default Constructor used
     // Static in-memory storage lists
-    public static final List<User> users = new ArrayList<>();
-    public static final List<Table> tables = new ArrayList<>();
-    public static final List<MenuItem> menuItems = new ArrayList<>();
-    public static final List<Order> orders = new ArrayList<>();
-    public static final List<Reservation> reservations = new ArrayList<>();
-    public static final List<Invoice> invoices = new ArrayList<>();
+    public static final List<User> users = new CopyOnWriteArrayList<>();
+    public static final List<Table> tables = new CopyOnWriteArrayList<>();
+    public static final List<MenuItem> menuItems = new CopyOnWriteArrayList<>();
+    public static final List<Order> orders = new CopyOnWriteArrayList<>();
+    public static final List<Reservation> reservations = new CopyOnWriteArrayList<>();
+    public static final List<Invoice> invoices = new CopyOnWriteArrayList<>();
 
     // Static initializer block runs automatically on application startup
     static {
@@ -59,18 +59,8 @@ public class RestaurantDatabase {
         menuItems.add(soda);
         menuItems.add(cake);
 
-        // 4. Seed Orders
-        Order sampleOrder = new Order("O001", 1);
-        sampleOrder.addItem(new OrderItem(burger, 2));
-        sampleOrder.addItem(new OrderItem(soda, 2));
-        sampleOrder.setStatus(OrderStatus.PREPARING);
-        orders.add(sampleOrder);
-
-        // 5. Seed Reservations
-        reservations.add(new Reservation("R001", "Alice Smith", "555-0199", 2, LocalDateTime.now().plusDays(1)));
-
-        // 6. Seed Invoices
-        Invoice sampleInvoice = new Invoice("INV-001", sampleOrder, 0.08); // 8% sales tax
-        invoices.add(sampleInvoice);
+        // 4. Seed Reservations
+        reservations.add(new Reservation("R001", "Alice Smith", "555-0199", 2, 2,
+                LocalDateTime.now().plusDays(1)));
     }
 }

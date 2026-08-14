@@ -74,17 +74,28 @@ public class OrderSocketServer implements Runnable {
 
         @Override
         public void run() {
-            try (
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true)
-            ) {
+            PrintWriter out = null;
+            try (Socket clientSocket = socket;
+                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
                 clientWriters.add(out);
                 String message;
                 while ((message = in.readLine()) != null) {
-                    broadcast(message);
+                    if ("REQUEST_MENU".equals(message)) {
+                        out.println(MenuUpdateMessage.snapshot());
+                    } else {
+                        MenuUpdateMessage.apply(message);
+                        OrderUpdateMessage.apply(message);
+                        broadcast(message);
+                    }
                 }
             } catch (Exception e) {
                 // Client disconnected
+            } finally {
+                if (out != null) {
+                    clientWriters.remove(out);
+                    out.close();
+                }
             }
         }
     }

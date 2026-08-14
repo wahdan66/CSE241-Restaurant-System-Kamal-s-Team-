@@ -19,14 +19,14 @@ public class InputValidator {
     }
 
     public static void validatePositiveNumber(double value, String fieldName) {
-        if (value <= 0) {
-            throw new ValidationException(fieldName + " must be greater than zero.");
+        if (!Double.isFinite(value) || value <= 0) {
+            throw new ValidationException(fieldName + " must be a finite number greater than zero.");
         }
     }
 
     public static void validateNonNegativeNumber(double value, String fieldName) {
-        if (value < 0) {
-            throw new ValidationException(fieldName + " cannot be negative.");
+        if (!Double.isFinite(value) || value < 0) {
+            throw new ValidationException(fieldName + " must be a finite non-negative number.");
         }
     }
 

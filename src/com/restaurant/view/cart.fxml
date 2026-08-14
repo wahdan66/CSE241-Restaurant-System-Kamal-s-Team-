@@ -23,6 +23,7 @@
     </HBox>
 
     <!-- Selected Items List -->
+    <Label fx:id="orderDetailsLabel" style="-fx-text-fill: #2980b9; -fx-font-weight: bold;"/>
     <ListView fx:id="cartListView" VBox.vgrow="ALWAYS" prefHeight="250"/>
 
     <!-- Total Price & Actions -->

@@ -1,12 +1,16 @@
 package com.restaurant.model;
 
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /** Represents the items ordered for one restaurant table and their workflow status. */
 public class Order implements Payable {
     private String id;
     private int tableNumber;
+    private String customerId;
+    private int partySize;
+    private LocalDateTime scheduledFor;
     private OrderStatus status;
     private List<OrderItem> items = new ArrayList<>();
 
@@ -34,6 +38,30 @@ public class Order implements Payable {
 
     public void setTableNumber(int tableNumber) {
         this.tableNumber = tableNumber;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public int getPartySize() {
+        return partySize;
+    }
+
+    public void setPartySize(int partySize) {
+        this.partySize = partySize;
+    }
+
+    public LocalDateTime getScheduledFor() {
+        return scheduledFor;
+    }
+
+    public void setScheduledFor(LocalDateTime scheduledFor) {
+        this.scheduledFor = scheduledFor;
     }
 
     public OrderStatus getStatus() {

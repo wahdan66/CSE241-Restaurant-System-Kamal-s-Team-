@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
@@ -20,8 +21,7 @@
     <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #2c3e50; -fx-padding: 15; -fx-background-radius: 8;">
         <Label text="Restaurant Portal" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
         <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT" spacing="10.0">
-            <Button text="View Cart / Order" onAction="#handleViewCart" styleClass="button-accent"/>
-            <Button text="Book Reservation" onAction="#handleBookReservation"/>
+            <Button text="Refresh" onAction="#handleRefresh"/>
             <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
         </HBox>
     </HBox>
@@ -35,13 +35,24 @@
         </HBox>
     </HBox>
 
+    <Label fx:id="orderStatusLabel" style="-fx-text-fill: #2980b9; -fx-font-weight: bold;" text="No active order."/>
+
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Label text="Order details:"/>
+        <ComboBox fx:id="tableComboBox" promptText="Choose table" prefWidth="150"/>
+        <TextField fx:id="partySizeField" promptText="Number of seats" prefWidth="120"/>
+        <DatePicker fx:id="orderDatePicker" prefWidth="140"/>
+        <ComboBox fx:id="orderTimeComboBox" promptText="Choose time" prefWidth="130"/>
+    </HBox>
+
     <!-- Menu List -->
     <ListView fx:id="menuListView" VBox.vgrow="ALWAYS" prefHeight="350"/>
 
     <!-- Bottom Status / Action -->
     <HBox alignment="CENTER_RIGHT" spacing="10.0">
         <Label fx:id="statusLabel" styleClass="error-text" visible="false"/>
-        <Button text="Add Selected Item to Cart" onAction="#handleAddToCart"/>
+        <Button text="Add to Cart" onAction="#handleAddToCart"/>
+        <Button text="View Cart / Order" onAction="#handleViewCart" styleClass="button-accent"/>
     </HBox>
 
 </VBox>

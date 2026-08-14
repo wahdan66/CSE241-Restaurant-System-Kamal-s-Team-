@@ -12,15 +12,23 @@ public class OrderSocketClient {
 
     private static final String HOST = "localhost";
     private static final int PORT = 8888;
-    private PrintWriter out;
+    private volatile PrintWriter out;
 
     public void startListening(Consumer<String> onMessageReceived) {
+        startListening(onMessageReceived, null);
+    }
+
+    public void startListening(Consumer<String> onMessageReceived, Runnable onConnected) {
         Thread clientThread = new Thread(() -> {
-            try (
-                    Socket socket = new Socket(HOST, PORT);
+            PrintWriter writer = null;
+            try (Socket socket = new Socket(HOST, PORT);
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
             ) {
-                out = new PrintWriter(socket.getOutputStream(), true);
+                writer = new PrintWriter(socket.getOutputStream(), true);
+                out = writer;
+                if (onConnected != null) {
+                    Platform.runLater(onConnected);
+                }
                 String message;
 
                 while ((message = in.readLine()) != null) {
@@ -30,6 +38,10 @@ public class OrderSocketClient {
                 }
             } catch (Exception e) {
                 System.out.println("[SocketClient] Not connected to live sync server.");
+            } finally {
+                if (out == writer) {
+                    out = null;
+                }
             }
         });
         clientThread.setDaemon(true);
@@ -37,8 +49,21 @@ public class OrderSocketClient {
     }
 
     public void sendMessage(String message) {
-        if (out != null) {
-            out.println(message);
+        PrintWriter writer = out;
+        if (writer != null) {
+            writer.println(message);
+            return;
         }
+
+        Thread senderThread = new Thread(() -> {
+            try (Socket socket = new Socket(HOST, PORT);
+                 PrintWriter temporaryWriter = new PrintWriter(socket.getOutputStream(), true)) {
+                temporaryWriter.println(message);
+            } catch (Exception e) {
+                System.out.println("[SocketClient] Could not send live sync message.");
+            }
+        }, "OrderSocketMessageSender");
+        senderThread.setDaemon(true);
+        senderThread.start();
     }
 }

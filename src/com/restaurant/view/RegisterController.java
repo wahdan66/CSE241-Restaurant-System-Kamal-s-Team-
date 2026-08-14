@@ -33,8 +33,8 @@ public class RegisterController {
             // Validate inputs using project's validator
             InputValidator.validateNotNullOrEmpty(name, "Name");
             InputValidator.validateNotNullOrEmpty(username, "Username");
-            InputValidator.validateNotNullOrEmpty(password, "Password");
-            InputValidator.validateNotNullOrEmpty(phone, "Phone");
+            InputValidator.validatePasswordStrength(password);
+            InputValidator.validatePhoneNumber(phone);
 
             // Check if username is already taken
             if (userDAO.findByUsername(username).isPresent()) {
